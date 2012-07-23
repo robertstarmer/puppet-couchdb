@@ -58,6 +58,8 @@ if ! run_cmd apt-get $APT_CONFIG install -qym puppet; then
 fi
 
 echo "Cloning couchdb repository from github.com..."
+if [ -d /etc/puppet/modules/couchdb ] ; then
+	echo -e "Wait, did you already grab the code? Perhaps just try rerunning puppet:\n\n\tpuppet apply -v -d /etc/puppet/modules/couchdb/manifests/init.pp -e \'include couchdb\'"
 if ! run_cmd git clone https://github.com/robertstarmer/puppet-couchdb /etc/puppet/modules/couchdb ; then
   echo "Can't run git!"
   exit 1
