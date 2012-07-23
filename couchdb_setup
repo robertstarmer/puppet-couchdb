@@ -64,7 +64,7 @@ if ! run_cmd git clone https://github.com/robertstarmer/puppet-couchdb /tmp/couc
 fi
 
 echo "Applying manifest with puppet..."
-if ! run_cmd puppet apply -v -d /tmp/couchdb/manifests/init.pp ; then
+if ! run_cmd puppet apply -v -d /tmp/couchdb/manifests/init.pp -e 'include couchdb'; then
   echo "Can't run puppet! Please try again."
   exit 1
 fi
