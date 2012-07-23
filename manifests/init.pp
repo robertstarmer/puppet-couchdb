@@ -2,8 +2,8 @@
 # ==couchdb==
 #
 
-couchdb_app_name = 'couchdb' # Could be couchdb-version,etc.
-couchdb_version = '1.2.0'
+$couchdb_app_name = 'couchdb' # Could be couchdb-version,etc.
+$couchdb_version = '1.2.0'
 
 if ($::osfamily == Debian){
 
