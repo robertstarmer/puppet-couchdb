@@ -12,7 +12,7 @@
 # couchdb {"couchdb":
 #   }
 #
-define couchdb (
+class couchdb (
 $couchdb_app_name = 'couchdb',
 $couchdb_version = '1.2.0'
 ) {
