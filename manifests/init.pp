@@ -39,7 +39,7 @@ if ($::osfamily == Debian){
     creates => '/tmp/apache-couchdb-${couchdb_version}'
   }
   ->
-  exec {"/tmp/apache-couchdb-${couchdb_version}/configure --prefix=''":
+  exec {"/tmp/apache-couchdb-${couchdb_version}/configure --srcdir=/tmp/apache-couchdb-${couchdb_version} --prefix='' ":
     cwd => "/tmp/apache-couchdb-${couchdb_version}",
     path => ['/bin','/usr/bin','/tmp/apache-couchdb-${couchdb_version}'],
     creates => '/tmp/apache-couchdb-${couchdb_version}/config.status'
