@@ -13,19 +13,26 @@ if ($::osfamily == Debian){
     comment => 'CouchDB Admin',
     system => true,
     uid => 598
-    }
+  }
+  <-
+  group {'couchdb':
+    ensure => present,
+    name => 'couchdb',
+    system => true,
+    gid => 598
+  }
 
-  file {["/var/lib/$couchdb_app_name","/var/log/$couchdb_app_name","/var/run/$couchdb_app_name"]:
-    ensure => directory
-      user => 'couchdb',
+  file { ["/var/lib/$couchdb_app_name","/var/log/$couchdb_app_name","/var/run/$couchdb_app_name"]:
+      ensure => directory,
+      owner => 'couchdb',
       group => 'couchdb',
-      permissions => 0755
+      mode => 0755
     }
 
-  package {['make','wget','g++','erlang-base','erlang-dev','erlang-eunit','erlang-nox','libmozjs185-dev','libicu-dev','libcurl4-gnutls-dev','libtool','curl']:
+  package { ['make', 'wget','g++', 'erlang-base', 'erlang-dev', 'erlang-eunit', 'erlang-nox', 'libmozjs185-dev', 'libicu-dev', 'libcurl4-gnutls-dev', 'libtool', 'curl' ]:
     ensure => latest
     }
-  ->
+
   exec {"/usr/bin/wget http://mirror.uoregon.edu/apache/couchdb/releases/${couchdb_version}/apache-couchdb-${couchdb_version}.tar.gz":
     cwd => '/tmp',
     path => ['/bin','/usr/bin'],
@@ -54,5 +61,15 @@ if ($::osfamily == Debian){
     cwd => '/tmp',
     path => ['/bin','/usr/bin','/usr/sbin'],
     creates => "/etc/rc3.d/S20couchdb"
+  }
+  ->
+  exec {"/bin/sed -e 's/;bind_address.*/bind_address = 0.0.0.0/' -i /etc/couchdb/local.ini":
+    cwd => '/tmp',
+    path => ['/bin','/usr/bin'],
+    unless => "/bin/grep 'bind_address = 0.0.0.0' 2>/dev/null"
+  }
+  ->
+  service {'couchdb':
+    ensure => running
   }
 }
