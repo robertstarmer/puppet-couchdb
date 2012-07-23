@@ -1,0 +1,69 @@
+#!/bin/bash
+# couchdb_setup by Robert Starmer is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+
+set -o errexit
+
+usage() {
+cat <<EOF
+usage: $0 options
+
+OPTIONS:
+  -h           Show this message
+  -p           http proxy i.e. -p http://username:password@host:port/
+EOF
+}
+
+function run_cmd () {
+  if [ -z "$PROXY" ]; then
+    sudo $*
+  else
+    sudo env http_proxy=$PROXY $*
+  fi
+}
+
+APT_CONFIG="-o Acquire::http::No-Cache=True -o Acquire::BrokenProxy=true -o Acquire::Retries=3"
+
+if [ -n "$http_proxy" ]; then
+  if [ -z "$https_proxy" ]; then
+    echo "Please set https_proxy env variable."
+    exit 1
+  fi
+  PROXY=$http_proxy
+fi
+
+while getopts "h:p:" OPTION
+do
+  case $OPTION in
+    h)
+      usage
+      exit 1
+      ;;
+    p)
+      PROXY=$OPTARG
+      export http_proxy=$PROXY
+      export https_proxy=$PROXY
+  esac
+done
+
+echo "Installing git..."
+if ! run_cmd apt-get $APT_CONFIG install -qym git; then
+  echo "Can't install prerequisite: git"
+  exit 1
+fi
+
+echo "Installing git..."
+if ! run_cmd apt-get $APT_CONFIG install -qym puppet; then
+  echo "Can't install prerequisite: puppet"
+  exit 1
+fi
+
+if ! run_cmd git clone https://github.com/robertstarmer/puppet-couchdb /tmp/couchdb ; then
+  echo "Can't run git!"
+  exit 1
+fi
+
+if ! run_cmd puppet apply -v -d /tmp/couchdb/manifests/init.pp ; then
+  echo "Can't run puppet! Please try again."
+  exit 1
+fi
+ 
