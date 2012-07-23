@@ -1,5 +1,6 @@
 #
 # ==couchdb==
+# This file and others as a part of the puppet-couch project by Robert Starmer is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
 #
 
 $couchdb_app_name = 'couchdb' # Could be couchdb-version,etc.
