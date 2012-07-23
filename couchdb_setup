@@ -57,11 +57,13 @@ if ! run_cmd apt-get $APT_CONFIG install -qym puppet; then
   exit 1
 fi
 
+echo "Cloning couchdb repository from github.com..."
 if ! run_cmd git clone https://github.com/robertstarmer/puppet-couchdb /tmp/couchdb ; then
   echo "Can't run git!"
   exit 1
 fi
 
+echo "Applying manifest with puppet..."
 if ! run_cmd puppet apply -v -d /tmp/couchdb/manifests/init.pp ; then
   echo "Can't run puppet! Please try again."
   exit 1
