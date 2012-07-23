@@ -45,13 +45,19 @@ do
   esac
 done
 
+echo "Updated apt repository..."
+if ! run_cmd apt-get $APT_CONFIG update; then
+  echo "Can't upadte apt repository"
+  exit 1
+fi
+
 echo "Installing git..."
 if ! run_cmd apt-get $APT_CONFIG install -qym git; then
   echo "Can't install prerequisite: git"
   exit 1
 fi
 
-echo "Installing git..."
+echo "Installing puppet..."
 if ! run_cmd apt-get $APT_CONFIG install -qym puppet; then
   echo "Can't install prerequisite: puppet"
   exit 1
