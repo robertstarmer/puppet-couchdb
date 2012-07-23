@@ -22,13 +22,6 @@ if ($::osfamily == Debian){
     gid => 598
   }
 
-  file { ["/var/lib/$couchdb_app_name","/var/log/$couchdb_app_name","/var/run/$couchdb_app_name"]:
-      ensure => directory,
-      owner => 'couchdb',
-      group => 'couchdb',
-      mode => 0755
-    }
-
   package { ['make', 'wget','g++', 'erlang-base', 'erlang-dev', 'erlang-eunit', 'erlang-nox', 'libmozjs185-dev', 'libicu-dev', 'libcurl4-gnutls-dev', 'libtool', 'curl' ]:
     ensure => latest
     }
@@ -68,7 +61,22 @@ if ($::osfamily == Debian){
     path => ['/bin','/usr/bin'],
     unless => "/bin/grep 'bind_address = 0.0.0.0' 2>/dev/null"
   }
-  ->
+
+
+  file { ["/var/lib/${couchdb_app_name}", "/var/log/${couchdb_app_name}", "/var/run/${couchdb_app_name}"]:
+      ensure => directory,
+      owner => 'couchdb',
+      group => 'couchdb',
+      mode => 0755
+    }
+  
+  file { ["/var/lib/${couchdb_app_name}/_replicator.couch", "/var/lib/${couchdb_app_name}/_users.couch", "/var/log/${couchdb_app_name}/couchdb.log"]:
+    ensure => present,
+    owner => 'couchdb',
+    group => 'couchdb',
+    mode => 0755
+  }
+ 
   service {'couchdb':
     ensure => running
   }
