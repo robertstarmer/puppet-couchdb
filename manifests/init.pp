@@ -33,7 +33,7 @@ $couchdb_version = '1.2.0'
       gid => 598
     }
 
-    package { ['make', 'wget','g++', 'erlang-base', 'erlang-dev', 'erlang-eunit', 'erlang-nox', 'libmozjs185-dev', 'libicu-dev', 'libcurl4-gnutls-dev', 'libtool', 'curl' ]:
+    package { ['make', 'wget', 'g++', 'erlang-base', 'erlang-dev', 'erlang-eunit', 'erlang-nox', 'libmozjs185-dev', 'libicu-dev', 'libcurl4-gnutls-dev', 'libtool', 'curl' ]:
       ensure => latest
       }
 
@@ -49,7 +49,7 @@ $couchdb_version = '1.2.0'
       creates => '/tmp/apache-couchdb-${couchdb_version}'
     }
     ->
-    exec {"/tmp/apache-couchdb-${couchdb_version}/configure --srcdir=/tmp/apache-couchdb-${couchdb_version} --prefix='' ":
+    exec {"/tmp/apache-couchdb-${couchdb_version}/configure --srcdir=/tmp/apache-couchdb-${couchdb_version} --prefix=\'\' ":
       cwd => "/tmp/apache-couchdb-${couchdb_version}",
       path => ['/bin','/usr/bin','/tmp/apache-couchdb-${couchdb_version}'],
       creates => '/tmp/apache-couchdb-${couchdb_version}/config.status'
